@@ -20,7 +20,11 @@
             <div class="card ml-3 mb-3" style="width: 18rem;">
                 <!-- Image -->
                 <img src="{{ pet_photo.photo.url }}"
-                     class="card-img-top" alt=" {{ pet_photo.description }} ">
+                     class="card-img-top"
+                     style="object-fit: cover"
+                     width=300px
+                     height=300px
+                     alt=" {{ pet_photo.description }} ">
                 <div class="card-body">
                     <!-- Info for each pet on the photo -->
                     {#                    <h5 class="card-title">Andrew, age: 3</h5>#}
@@ -36,7 +40,7 @@
                     <p class="card-text">{{ pet_photo.description|truncatechars:30 }}</p>
                     <!-- Button to the Photo Details Page -->
                     {#                link to url with THIS PET'S ID#}
-                    <a href="{% url 'pet_photo_details' pet_photo.id %}" class="btn btn-primary">See details</a>
+                    <a href="{% url 'pet photo details' pet_photo.id %}" class="btn btn-primary">See details</a>
                 </div>
             </div>
             <!-- End First Card -->
