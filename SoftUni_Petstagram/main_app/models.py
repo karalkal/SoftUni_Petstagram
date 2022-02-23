@@ -41,14 +41,14 @@ class Pet(models.Model):
 
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=max([len(x) for (x, _) in PET_TYPES]), choices=PET_TYPES)
-    dob = models.DateTimeField(null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
 
     # foreign key
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     @property
     def age(self):
-        return datetime.datetime.now().year - self.dob.year
+        return datetime.datetime.now().year - self.date_of_birth.year
 
     # All pets' names should be unique for that user
     class Meta:

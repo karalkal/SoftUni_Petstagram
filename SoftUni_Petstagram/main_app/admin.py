@@ -22,8 +22,13 @@ class PetAdmin(admin.ModelAdmin):
 
 @admin.register(PetPhoto)
 class PetPhotoAdmin(admin.ModelAdmin):
+    @staticmethod
+    def tagged(obj):
+        return ", ".join([p.name for p in obj.tagged_pets.all()])
+
     list_display = (
-        'photo',
+        'tagged',
         'publication_date',
-        'likes'
+        'likes',
+        'photo'
     )

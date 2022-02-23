@@ -31,7 +31,7 @@
                     {#                    <h5 class="card-title">Otto</h5>#}
                     {% for tagged_pet in pet_photo.tagged_pets.all %}
                         <h5 class="card-title">{{ tagged_pet.name }}
-                            {% if tagged_pet.dob %}
+                            {% if tagged_pet.date_of_birth %}
                                 , age: {{ tagged_pet.age }}</h5>
                             {% endif %}
                     {% endfor %}

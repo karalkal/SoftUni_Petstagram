@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django import forms
 
-from SoftUni_Petstagram.main_app.models import Profile
+from SoftUni_Petstagram.main_app.models import Profile, Pet
 
 
 class CreateProfileForm(forms.ModelForm):
@@ -94,3 +94,9 @@ class EditProfileForm(forms.ModelForm):
                        }),
 
         }
+
+
+class CreatePetForm(forms.ModelForm):
+    class Meta:
+        model = Pet
+        fields = '__all__'
