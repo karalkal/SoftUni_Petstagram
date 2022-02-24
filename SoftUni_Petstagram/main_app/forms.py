@@ -102,7 +102,8 @@ class DeleteProfileForm(forms.ModelForm):
         fields = ()  # no fields will be shown
 
     def save(self, commit=True):
-        owners_pets = Pet.objects.filter(petphoto__tagged_pets__owner=self.instance)
+        # owners_pets = Pet.objects.filter(petphoto__tagged_pets__owner=self.instance)
+        owners_pets = self.instance.pet_set.all()
         owners_photos = PetPhoto.objects.filter(tagged_pets__owner=self.instance)
         owners_photos.delete()
         owners_pets.delete()
@@ -113,6 +114,20 @@ class DeleteProfileForm(forms.ModelForm):
 class CreatePetForm(forms.ModelForm):
     class Meta:
         model = Pet
-        fields = '__all__'
+        fields = ('name', 'type', 'date_of_birth')
+        widgets = {
+            'name': forms.TextInput(
+                attrs={'class': "form-control",
+                       'placeholder': "Enter Pet Name", }
+            ),
 
+            'type': forms.Select(
+                choices=Pet.PET_TYPES,
+                attrs={'class': "form-control", }
+            ),
 
+            'date_of_birth': forms.SelectDateWidget(
+                years=range(datetime.now().year, 1920, -1),
+                attrs={'class': "form-control", }
+            ),
+        }
