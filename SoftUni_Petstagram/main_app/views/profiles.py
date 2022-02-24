@@ -16,7 +16,10 @@ def profile_details(request):
     photos_count = all_photos_for_profile.count()
 
     return render(request, 'profile_details.html',
-                  {'profile': profile, 'total_likes_count': total_likes_count, 'photos_count': photos_count})
+                  {'profile': profile,
+                   'total_likes_count': total_likes_count,
+                   'photos_count': photos_count,
+                   })
 
 
 def create_profile_view(request):
@@ -47,7 +50,7 @@ def delete_profile_view(request):
     if request.method == 'POST':
         form = DeleteProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            form.save()
+            form.save()  # save() is overwritten in formssssssssss
             return redirect('home')
     else:
         form = DeleteProfileForm(instance=profile)

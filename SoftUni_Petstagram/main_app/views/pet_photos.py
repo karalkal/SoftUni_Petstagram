@@ -19,6 +19,8 @@ def like_pet_photo(request, pk):
 
 
 def add_pet_photo(request):
+    if request.method == 'POST':
+        
     return render(request, 'photo_create.html')
 
 

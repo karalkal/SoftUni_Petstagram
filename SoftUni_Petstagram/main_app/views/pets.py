@@ -17,9 +17,9 @@ def add_pet(request):
     return render(request, 'pet_create.html', {'form': form})
 
 
-def edit_pet(request):
+def edit_pet(request, pk):
     return render(request, 'pet_edit.html')
 
 
-def delete_pet(request):
+def delete_pet(request, pk):
     return render(request, 'pet_delete.html')

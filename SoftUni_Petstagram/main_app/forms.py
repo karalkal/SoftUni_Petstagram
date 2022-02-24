@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django import forms
 
+from SoftUni_Petstagram.main_app.helpers import get_profile
 from SoftUni_Petstagram.main_app.models import Profile, Pet, PetPhoto
 
 
@@ -130,4 +131,32 @@ class CreatePetForm(forms.ModelForm):
                 years=range(datetime.now().year, 1920, -1),
                 attrs={'class': "form-control", }
             ),
+        }
+
+
+class AddPetPhotoForm(forms.ModelForm):
+    owners_pets = Pet.objects.filter(petphoto__tagged_pets__owner=get_profile())
+
+    class Meta:
+        model = PetPhoto
+        fields = ('photo', 'description', 'tagged_pets')
+        widgets = {
+            'photo': forms.TextInput(
+                attrs={'class': "form-control-file",
+                       'label': "Pet Image"}
+            ),
+
+            'description': forms.Textarea(
+                attrs={'rows': 3,
+                       'class': "form-control",
+                       'placeholder': "Enter Description",
+                       }
+            ),
+
+            'tagged_pets': forms.Select(
+                choices=(),  # Shows only names of all created pets in the profile.
+                attrs={'class': "form-control",
+                       'required': True,
+                       }
+            )
         }
