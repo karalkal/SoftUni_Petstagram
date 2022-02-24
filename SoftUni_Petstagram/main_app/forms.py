@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django import forms
 
-from SoftUni_Petstagram.main_app.models import Profile, Pet
+from SoftUni_Petstagram.main_app.models import Profile, Pet, PetPhoto
 
 
 class CreateProfileForm(forms.ModelForm):
@@ -96,7 +96,23 @@ class EditProfileForm(forms.ModelForm):
         }
 
 
+class DeleteProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ()  # no fields will be shown
+
+    def save(self, commit=True):
+        owners_pets = Pet.objects.filter(petphoto__tagged_pets__owner=self.instance)
+        owners_photos = PetPhoto.objects.filter(tagged_pets__owner=self.instance)
+        owners_photos.delete()
+        owners_pets.delete()
+        self.instance.delete()  # to remove record from DB
+        return self.instance
+
+
 class CreatePetForm(forms.ModelForm):
     class Meta:
         model = Pet
         fields = '__all__'
+
+

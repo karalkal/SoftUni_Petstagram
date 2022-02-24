@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from SoftUni_Petstagram.main_app.forms import CreateProfileForm, EditProfileForm
+from SoftUni_Petstagram.main_app.forms import CreateProfileForm, EditProfileForm, DeleteProfileForm
 from SoftUni_Petstagram.main_app.helpers import get_profile
 from SoftUni_Petstagram.main_app.models import Profile, PetPhoto, Pet
 
@@ -43,4 +43,12 @@ def edit_profile_view(request):
 
 
 def delete_profile_view(request):
-    return None
+    profile = get_profile()
+    if request.method == 'POST':
+        form = DeleteProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = DeleteProfileForm(instance=profile)
+    return render(request, 'profile_delete.html', {'form': form})
