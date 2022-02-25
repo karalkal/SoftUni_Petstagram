@@ -135,28 +135,35 @@ class CreatePetForm(forms.ModelForm):
 
 
 class AddPetPhotoForm(forms.ModelForm):
-    owners_pets = Pet.objects.filter(petphoto__tagged_pets__owner=get_profile())
-
     class Meta:
+        owners_pets = Pet.objects.filter(owner=get_profile())
+        # PET_TYPES = []
+        # for pet in owners_pets:
+        #     print(pet.type)
+        #     pair = pet.type, pet.type
+        # PET_TYPES.append(pair)
+        PET_TYPES = [(x.type, x.type) for x in owners_pets]  # ("Cat", "Cat"), ("Dog", "Dog"),
         model = PetPhoto
         fields = ('photo', 'description', 'tagged_pets')
-        widgets = {
-            'photo': forms.TextInput(
-                attrs={'class': "form-control-file",
-                       'label': "Pet Image"}
-            ),
+        labels = {'photo': "Pet Image",
+                  'tagged_pets': "Tag Pets"}
+        widgets = \
+            {
+                'photo': forms.FileInput(
+                    attrs={'class': "form-control-file", }
+                ),
 
-            'description': forms.Textarea(
-                attrs={'rows': 3,
-                       'class': "form-control",
-                       'placeholder': "Enter Description",
-                       }
-            ),
+                'description': forms.Textarea(
+                    attrs={'rows': 3,
+                           'class': "form-control",
+                           'placeholder': "Enter Description",
+                           }
+                ),
 
-            'tagged_pets': forms.Select(
-                choices=(),  # Shows only names of all created pets in the profile.
-                attrs={'class': "form-control",
-                       'required': True,
-                       }
-            )
-        }
+                'tagged_pets': forms.SelectMultiple(
+                    choices=PET_TYPES,  # Shows only names of all created pets in the profile.
+                    attrs={'class': "form-control",
+                           'required': True,
+                           }
+                )
+            }

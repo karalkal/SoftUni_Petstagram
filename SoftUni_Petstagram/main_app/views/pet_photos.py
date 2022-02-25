@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 
+from SoftUni_Petstagram.main_app.forms import AddPetPhotoForm
 from SoftUni_Petstagram.main_app.helpers import get_profile
 from SoftUni_Petstagram.main_app.models import PetPhoto
 
@@ -20,8 +21,14 @@ def like_pet_photo(request, pk):
 
 def add_pet_photo(request):
     if request.method == 'POST':
-        
-    return render(request, 'photo_create.html')
+        form = AddPetPhotoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = AddPetPhotoForm()
+
+    return render(request, 'photo_create.html', {'form': form})
 
 
 def edit_pet_photo(request):
