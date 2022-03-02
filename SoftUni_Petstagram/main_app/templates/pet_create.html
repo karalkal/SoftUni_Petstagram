@@ -9,6 +9,10 @@
             <div class="col-lg-6">
                 <form method="post" class="container mb-5" action="{% url 'add pet' %}">
                     {% csrf_token %}
+                    {% if error %}
+                        <p><strong>ERROR:</strong></p>
+                        <p> A pet with the same name already exists for this user</p>
+                    {% endif %}
                     {{ form }}
                     <!-- Form for Adding a Pet Info -->
                     <button class="btn btn-primary mt-2" type="submit">Create</button>
