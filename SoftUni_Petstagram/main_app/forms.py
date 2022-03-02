@@ -174,26 +174,26 @@ class EditPetPhotoForm(forms.ModelForm):
         owners_pets = Pet.objects.filter(owner=get_profile())
         PET_TYPES = [(x.type, x.type) for x in owners_pets]  # ("Cat", "Cat"), ("Dog", "Dog"),
         model = PetPhoto
-        fields = ('photo', 'description', 'tagged_pets')
+        fields = ('description', 'tagged_pets')
         labels = {'photo': "Pet Image",
                   'tagged_pets': "Tag Pets"}
         widgets = \
             {
-                'photo': forms.FileInput(
-                    attrs={'class': "form-control-file", 'disabled': True}
+                # 'photo': forms.FileInput(
+                #     attrs={'class': "form-control-file",
+                #            'disabled': True, 'hidden': True}
+                # ),
+
+                'description': forms.Textarea(
+                    attrs={'rows': 3,
+                           'class': "form-control",
+                           }
                 ),
 
-                # 'description': forms.Textarea(
-                #     attrs={'rows': 3,
-                #            'class': "form-control",
-                #            'placeholder': "Enter Description",
-                #            }
-                # ),
-                #
-                # 'tagged_pets': forms.SelectMultiple(
-                #     choices=PET_TYPES,  # Shows only names of all created pets in the profile.
-                #     attrs={'class': "form-control",
-                #            'required': True,
-                #            }
-                # )
+                'tagged_pets': forms.SelectMultiple(
+                    choices=PET_TYPES,  # Shows only names of all created pets in the profile.
+                    attrs={'class': "form-control",
+                           'required': True,
+                           }
+                )
             }

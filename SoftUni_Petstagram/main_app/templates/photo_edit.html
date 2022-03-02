@@ -3,15 +3,15 @@
 
     <div class="container mb-5 ">
         <h1 class="text-center">Edit Pet Photo</h1>
-        {#        <img src="https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGV0c3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"#}
-        {#             class="w-50 rounded mx-auto d-block" alt="Photo description">#}
+                <img src="{{ photo_to_edit.photo.url }}"
+                     class="w-50 rounded mx-auto d-block" alt="{{ photo_to_edit.description }}">
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-6">
-                {% csrf_token %}
-                <form method="POST" action="{% url 'pet photo details' photo_to_edit.pk %}">
-
+                <form method="POST" action="{% url 'edit pet photo' photo_to_edit.pk %}">
+                    {% csrf_token %}
                     <!-- Form for Editing a Photo -->
+                    {{ form }}
 
                     <button class="btn btn-primary mt-2" type="submit">Edit</button>
                 </form>
