@@ -134,6 +134,22 @@ class CreatePetForm(forms.ModelForm):
         }
 
 
+class DeletePetForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for (_, field) in self.fields.items():
+            field.widget.attrs['disabled'] = 'disabled'
+            field.widget.attrs['class'] = "form-control"
+
+    def save(self, commit=True):
+        self.instance.delete()  # to remove record from DB
+        return self.instance
+
+    class Meta:
+        model = Pet
+        fields = ('name', 'type', 'date_of_birth')
+
+
 class AddPetPhotoForm(forms.ModelForm):
     class Meta:
         owners_pets = Pet.objects.filter(owner=get_profile())
@@ -177,23 +193,22 @@ class EditPetPhotoForm(forms.ModelForm):
         fields = ('description', 'tagged_pets')
         labels = {'photo': "Pet Image",
                   'tagged_pets': "Tag Pets"}
-        widgets = \
-            {
-                # 'photo': forms.FileInput(
-                #     attrs={'class': "form-control-file",
-                #            'disabled': True, 'hidden': True}
-                # ),
+        widgets = {
+            # 'photo': forms.FileInput(
+            #     attrs={'class': "form-control-file",
+            #            'disabled': True, 'hidden': True}
+            # ),
 
-                'description': forms.Textarea(
-                    attrs={'rows': 3,
-                           'class': "form-control",
-                           }
-                ),
+            'description': forms.Textarea(
+                attrs={'rows': 3,
+                       'class': "form-control",
+                       }
+            ),
 
-                'tagged_pets': forms.SelectMultiple(
-                    choices=PET_TYPES,  # Shows only names of all created pets in the profile.
-                    attrs={'class': "form-control",
-                           'required': True,
-                           }
-                )
-            }
+            'tagged_pets': forms.SelectMultiple(
+                choices=PET_TYPES,  # Shows only names of all created pets in the profile.
+                attrs={'class': "form-control",
+                       'required': True,
+                       }
+            )
+        }

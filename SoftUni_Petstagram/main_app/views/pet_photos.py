@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 
 from SoftUni_Petstagram.main_app.forms import AddPetPhotoForm, EditPetPhotoForm
 from SoftUni_Petstagram.main_app.helpers import get_profile
-from SoftUni_Petstagram.main_app.models import PetPhoto
+from SoftUni_Petstagram.main_app.models import PetPhoto, Pet
 
 
 def photo_details(request, pk):
@@ -19,7 +20,11 @@ def like_pet_photo(request, pk):
     return redirect('pet photo details', pk)
 
 
+# TODO Shouldn't be able to add pet photo if no pets are created
 def add_pet_photo(request):
+    if Pet.objects.count() == 0:
+        return redirect('add pet')
+
     if request.method == 'POST':
         form = AddPetPhotoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -28,7 +33,8 @@ def add_pet_photo(request):
     else:
         form = AddPetPhotoForm()
 
-    return render(request, 'photo_create.html', {'form': form})
+    return render(request, 'photo_create.html',
+                  {'form': form})
 
 
 def edit_pet_photo(request, pk):
@@ -48,5 +54,6 @@ def edit_pet_photo(request, pk):
 
 
 def delete_pet_photo(request, pk):
-    PetPhoto.objects.get(pk=pk).delete()
+    photo_to_delete = PetPhoto.objects.get(pk=pk)
+    photo_to_delete.delete()
     return redirect('dashboard')
