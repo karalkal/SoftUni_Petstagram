@@ -3,7 +3,17 @@
 {% block page_content %}
 
     <div class="container">
+
+
+        {#        The below is to ensure photos cannot be added before a pet object is created because photos need to be tagged#}
+{#        {% if not pets_found %}#}
+        {#            <p><strong>ATTENTION:</strong></p>#}
+        {#            <p> A pet object needs to be created first</p>#}
+        {#        {% endif %}#}
+
         <h1 class="text-center">Add Your Pet Info</h1>
+
+
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-6">
@@ -13,8 +23,9 @@
                         <p><strong>ERROR:</strong></p>
                         <p> A pet with the same name already exists for this user</p>
                     {% endif %}
-                    {{ form }}
+
                     <!-- Form for Adding a Pet Info -->
+                    {{ form }}
                     <button class="btn btn-primary mt-2" type="submit">Create</button>
                 </form>
             </div>
