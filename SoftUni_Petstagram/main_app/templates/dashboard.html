@@ -32,14 +32,13 @@
                     {% for tagged_pet in pet_photo.tagged_pets.all %}
                         <h5 class="card-title">{{ tagged_pet.name }}
                             {% if tagged_pet.date_of_birth %}
-                                , age: {{ tagged_pet.age }}</h5>
+                                , age: {{ tagged_pet.age }}
                             {% endif %}
+                        </h5>
                     {% endfor %}
                     <!-- First 30 chars from the description -->
-                    {#                    <p class="card-text">This is Andrew the cat, and Ot</p>#}
                     <p class="card-text">{{ pet_photo.description|truncatechars:30 }}</p>
                     <!-- Button to the Photo Details Page -->
-                    {#                link to url with THIS PET'S ID#}
                     <a href="{% url 'pet photo details' pet_photo.id %}" class="btn btn-primary">See details</a>
                 </div>
             </div>
