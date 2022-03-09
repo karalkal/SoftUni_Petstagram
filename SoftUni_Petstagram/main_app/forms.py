@@ -151,6 +151,7 @@ class DeletePetForm(forms.ModelForm):
 
 
 class AddPetPhotoForm(forms.ModelForm):
+    # pass
     class Meta:
         owners_pets = Pet.objects.filter(owner=get_profile())
         # PET_TYPES = []

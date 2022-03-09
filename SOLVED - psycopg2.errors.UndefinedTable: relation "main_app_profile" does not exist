@@ -1,0 +1,4 @@
+When recreating the project without an existing DB this error appeared:
+psycopg2.errors.UndefinedTable: relation "main_app_profile" does not exist
+Apparently the issue is with the profile views and AddPetPhotoForm and EditPetPhotoForm becase these have side effects. (I need to examine the subject properly!)
+To resolve this I replaced all code in the AddPetPhotoForm and EditPetPhotoForm with pass, deleted all migrations, makemigrations and migrate, createsuperuser etc. and the app was up and running again.
