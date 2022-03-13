@@ -2,7 +2,7 @@
 
 {% block page_content %}
 
-    {% if not owners_pets_photos %}
+    {% if not pet_photos %}
         <!-- If there are NO pet photos -->
         <h1 class='text-center'>No pet photos yet</h1>
         <div class=" row d-flex justify-content-center align-content-center">
@@ -15,7 +15,7 @@
         <div class="container mb-5">
         <div class="row mb-5">
 
-        {% for pet_photo in owners_pets_photos %}
+        {% for pet_photo in pet_photos %}
             <!-- First Card with Info for the Pet -->
             <div class="card ml-3 mb-3" style="width: 18rem;">
                 <!-- Image -->
@@ -25,10 +25,8 @@
                      width=300px
                      height=300px
                      alt=" {{ pet_photo.description }} ">
+
                 <div class="card-body">
-                    <!-- Info for each pet on the photo -->
-                    {#                    <h5 class="card-title">Andrew, age: 3</h5>#}
-                    {#                    <h5 class="card-title">Otto</h5>#}
                     {% for tagged_pet in pet_photo.tagged_pets.all %}
                         <h5 class="card-title">{{ tagged_pet.name }}
                             {% if tagged_pet.date_of_birth %}
@@ -36,6 +34,7 @@
                             {% endif %}
                         </h5>
                     {% endfor %}
+
                     <!-- First 30 chars from the description -->
                     <p class="card-text">{{ pet_photo.description|truncatechars:30 }}</p>
                     <!-- Button to the Photo Details Page -->

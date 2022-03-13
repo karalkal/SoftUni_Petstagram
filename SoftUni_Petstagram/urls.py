@@ -6,7 +6,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('SoftUni_Petstagram.main_app.urls'))
+    path('', include('SoftUni_Petstagram.main_app.urls')),
+    path('accounts/', include('SoftUni_Petstagram.accounts_app.urls')),
 ]
 
 if settings.DEBUG:

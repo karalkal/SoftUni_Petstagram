@@ -1,15 +1,16 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, CreateView
 
 from SoftUni_Petstagram.main_app.forms import AddPetPhotoForm, EditPetPhotoForm
-from SoftUni_Petstagram.main_app.helpers import get_profile
 from SoftUni_Petstagram.main_app.models import PetPhoto, Pet
 
 
-def photo_details(request, pk):
-    searched_photo = PetPhoto.objects.prefetch_related('tagged_pets').get(pk=pk)
-    context = {"searched_photo": searched_photo}
-    return render(request, 'photo_details.html', context)
+class PhotoDetailsView(LoginRequiredMixin, DetailView):
+    model = PetPhoto
+    template_name = 'main_app/photo_details.html'
+    context_object_name = 'searched_photo'
 
 
 def like_pet_photo(request, pk):
@@ -21,20 +22,11 @@ def like_pet_photo(request, pk):
 
 
 # TODO Shouldn't be able to add pet photo if no pets are created
-def add_pet_photo(request):
-    if Pet.objects.count() == 0:
-        return redirect('add pet')
-
-    if request.method == 'POST':
-        form = AddPetPhotoForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('dashboard')
-    else:
-        form = AddPetPhotoForm()
-
-    return render(request, 'photo_create.html',
-                  {'form': form})
+class CreatePetPhotoView(LoginRequiredMixin, CreateView):
+    model = PetPhoto
+    template_name = 'main_app/photo_create.html'
+    fields = ('photo', 'description', 'tagged_pets')
+    success_url = reverse_lazy('dashboard')
 
 
 def edit_pet_photo(request, pk):
@@ -48,7 +40,7 @@ def edit_pet_photo(request, pk):
     else:
         form = EditPetPhotoForm(instance=photo_to_edit)
 
-    return render(request, 'photo_edit.html',
+    return render(request, 'main_app/photo_edit.html',
                   {'form': form,
                    'photo_to_edit': photo_to_edit})
 

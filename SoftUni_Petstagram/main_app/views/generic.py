@@ -1,24 +1,28 @@
 from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, ListView
 
-from SoftUni_Petstagram.main_app.helpers import get_profile
 from SoftUni_Petstagram.main_app.models import Profile, PetPhoto, Pet
 
 
-def home(request):
-    context = {'hide_additional_menu_items': True}
-    return render(request, 'home_page.html', context)
+class HomeView(TemplateView):
+    template_name = 'main_app/home_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_additional_menu_items'] = True  # add this to context dict
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('dashboard')
+        return super().dispatch(request, *args, **kwargs)
 
 
-def dashboard(request):
-    # check pets for specific user, in our case first one
-    profile = get_profile()
-    if not profile:
-        return redirect('401_error.html')
+class DashboardView(ListView):
+    model = PetPhoto
+    template_name = 'main_app/dashboard.html'
+    context_object_name = 'pet_photos'
 
-    # owners_pets = profile.pet_set.all()
-    owners_pets_photos = set(PetPhoto.objects
-                             .prefetch_related('tagged_pets')
-                             .filter(tagged_pets__owner=profile))
 
-    context = {"owners_pets_photos": owners_pets_photos}
-    return render(request, 'dashboard.html', context)
+def error_401(request):
+    return render(request, 'main_app/401_error.html')

@@ -105,14 +105,26 @@ class DeleteProfileForm(forms.ModelForm):
     def save(self, commit=True):
         # owners_pets = Pet.objects.filter(petphoto__tagged_pets__owner=self.instance)
         owners_pets = self.instance.pet_set.all()
-        owners_photos = PetPhoto.objects.filter(tagged_pets__owner=self.instance)
+        owners_photos = PetPhoto.objects.filter(tagged_pets__user=self.instance)
         owners_photos.delete()
         owners_pets.delete()
         self.instance.delete()  # to remove record from DB
         return self.instance
 
 
+# ATTENTION! WTF is going on here?!
 class CreatePetForm(forms.ModelForm):
+    def __init__(self, user, *args, **kwargs):
+        super(CreatePetForm, self).__init__(*args, **kwargs)
+        self.user = user  # added user to instance of form, will be added below
+
+    def save(self, commit=True):
+        # instantiate pet from parent class, but not saving it yet
+        pet = super(CreatePetForm, self).save(commit=False)
+        pet.user = self.user
+        if commit:
+            pet.save()
+
     class Meta:
         model = Pet
         fields = ('name', 'type', 'date_of_birth')
@@ -134,6 +146,10 @@ class CreatePetForm(forms.ModelForm):
         }
 
 
+class UpdatePetForm(CreatePetForm):
+    pass
+
+
 class DeletePetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -153,12 +169,8 @@ class DeletePetForm(forms.ModelForm):
 class AddPetPhotoForm(forms.ModelForm):
     # pass
     class Meta:
-        owners_pets = Pet.objects.filter(owner=get_profile())
-        # PET_TYPES = []
-        # for pet in owners_pets:
-        #     print(pet.type)
-        #     pair = pet.type, pet.type
-        # PET_TYPES.append(pair)
+        owners_pets = Pet.objects.filter(user=get_profile())
+
         PET_TYPES = [(x.type, x.type) for x in owners_pets]  # ("Cat", "Cat"), ("Dog", "Dog"),
         model = PetPhoto
         fields = ('photo', 'description', 'tagged_pets')
@@ -187,8 +199,9 @@ class AddPetPhotoForm(forms.ModelForm):
 
 
 class EditPetPhotoForm(forms.ModelForm):
+    # pass
     class Meta:
-        owners_pets = Pet.objects.filter(owner=get_profile())
+        owners_pets = Pet.objects.filter(user=get_profile())
         PET_TYPES = [(x.type, x.type) for x in owners_pets]  # ("Cat", "Cat"), ("Dog", "Dog"),
         model = PetPhoto
         fields = ('description', 'tagged_pets')

@@ -1,26 +1,27 @@
 from django.urls import path
-from .views.generic import home, dashboard
+from .views.generic import HomeView, DashboardView, error_401
 from .views.profiles import profile_details, create_profile_view, edit_profile_view, delete_profile_view
-from .views.pet_photos import photo_details, like_pet_photo, add_pet_photo, edit_pet_photo, delete_pet_photo
-from .views.pets import add_pet, edit_pet, delete_pet
+from .views.pet_photos import PhotoDetailsView, like_pet_photo, CreatePetPhotoView, edit_pet_photo, delete_pet_photo
+from .views.pets import CreatePetView, EditPetView, DeletePetView
 
 urlpatterns = [
-    path('', home, name="home"),
-    path('dashboard/', dashboard, name="dashboard"),
+    path('', HomeView.as_view(), name="home"),
+    path('dashboard/', DashboardView.as_view(), name="dashboard"),
+    path('401_error/', error_401, name="401_error"),
 
     path('profile/', profile_details, name="profile"),
     path('profile/create/', create_profile_view, name="create profile"),
     path('profile/edit/', edit_profile_view, name="edit profile"),
     path('profile/delete/', delete_profile_view, name="delete profile"),
 
-    path('photo/details/<int:pk>/', photo_details, name="pet photo details"),
+    path('photo/details/<int:pk>/', PhotoDetailsView.as_view(), name="pet photo details"),
     path('photo/like/<int:pk>/', like_pet_photo, name="like pet photo"),
-    path('photo/add/', add_pet_photo, name="add pet photo"),
+    path('photo/add/', CreatePetPhotoView.as_view(), name="add pet photo"),
     path('photo/edit/<int:pk>/ ', edit_pet_photo, name="edit pet photo"),
     path('photo/delete/<int:pk>/ ', delete_pet_photo, name="delete pet photo"),
 
-    path('pet/add/', add_pet, name="add pet"),
-    path('pet/edit/<int:pk>/', edit_pet, name="edit pet"),
-    path('pet/delete/<int:pk>/', delete_pet, name="delete pet"),
+    path('pet/add/', CreatePetView.as_view(), name="add pet"),
+    path('pet/edit/<int:pk>/', EditPetView.as_view(), name="edit pet"),
+    path('pet/delete/<int:pk>/', DeletePetView.as_view(), name="delete pet"),
 
 ]

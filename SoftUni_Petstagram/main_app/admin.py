@@ -12,12 +12,12 @@ class PetInlineAdmin(admin.StackedInline):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name')
-    inlines = (PetInlineAdmin,)
+    # inlines = (PetInlineAdmin,)
 
 
 @admin.register(Pet)
 class PetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'owner')
+    list_display = ('name', 'type', 'user')
 
 
 @admin.register(PetPhoto)
