@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView
 
-from SoftUni_Petstagram.main_app.models import Profile, PetPhoto, Pet
+from SoftUni_Petstagram.common.view_mixins import RedirectToDashboard
+from SoftUni_Petstagram.main_app.models import PetPhoto
 
 
-class HomeView(TemplateView):
+class HomeView(RedirectToDashboard, TemplateView):
     template_name = 'main_app/home_page.html'
 
     def get_context_data(self, **kwargs):
@@ -12,10 +13,11 @@ class HomeView(TemplateView):
         context['hide_additional_menu_items'] = True  # add this to context dict
         return context
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('dashboard')
-        return super().dispatch(request, *args, **kwargs)
+    ## Now inherited from RedirectToDashboard
+    # def dispatch(self, request, *args, **kwargs):
+    #     if request.user.is_authenticated:
+    #         return redirect('dashboard')
+    #     return super().dispatch(request, *args, **kwargs)
 
 
 class DashboardView(ListView):

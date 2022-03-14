@@ -30,8 +30,10 @@
                 {#                <p class="mt-2">Total Images: {{ profile.pet_set.count }}</p>#}
                 <p class="mt-2">Total Images: {{ photos_count }}</p>
                 <p class="mt-2">Total Likes: {{ total_likes_count }}</p>
-                <a href="{% url 'edit profile' %}" class="btn btn-primary">Edit</a>
-                <a href="{% url 'delete profile' %}" class="btn btn-danger">Delete</a>
+                {% if is_owner_of_profile %}
+                    <a href="{% url 'edit profile' %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'delete profile' %}" class="btn btn-danger">Delete</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -42,14 +44,18 @@
         <div class="d-flex justify-content-start mb-5">
 
             {#        can use the context variable pets_for_profile too #}
-            {% for pet in profile.pet_set.all %}
+            {% for pet in pets_for_profile %}
                 <div style="width: 18rem;">
                     <h5>{{ pet.name }}</h5>
                     {% if pet.date_of_birth %}
                         <p class="mt-2">Age: {{ pet.age }}</p>
                     {% endif %}
-                    <a href="{% url 'edit pet' pet.pk %}" class="btn btn-primary">Edit</a>
-                    <a href="{% url 'delete pet' pet.pk %}" class="btn btn-danger">Delete</a>
+
+                    {#                Probably should put this if before     <h2 class="text-center">My Pets</h2>    #}
+                    {% if is_owner_of_profile %}
+                        <a href="{% url 'edit pet' pet.pk %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'delete pet' pet.pk %}" class="btn btn-danger">Delete</a>
+                    {% endif %}
                 </div>
 
             {% endfor %}
