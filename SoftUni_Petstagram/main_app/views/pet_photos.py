@@ -7,10 +7,18 @@ from SoftUni_Petstagram.main_app.forms import AddPetPhotoForm, EditPetPhotoForm
 from SoftUni_Petstagram.main_app.models import PetPhoto, Pet
 
 
-class PhotoDetailsView(LoginRequiredMixin, DetailView):
+class PetPhotoDetailsView(LoginRequiredMixin, DetailView):
     model = PetPhoto
     template_name = 'main_app/photo_details.html'
     context_object_name = 'searched_photo'
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('tagged_pets')
+
+    def get_context_data(self, **kwargs):
+        context = super(PetPhotoDetailsView, self).get_context_data(**kwargs)
+        context['is_owner'] = self.object.user == self.request.user
+        return context
 
 
 def like_pet_photo(request, pk):
@@ -27,6 +35,10 @@ class CreatePetPhotoView(LoginRequiredMixin, CreateView):
     template_name = 'main_app/photo_create.html'
     fields = ('photo', 'description', 'tagged_pets')
     success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 def edit_pet_photo(request, pk):

@@ -1,25 +1,53 @@
 from django.shortcuts import render, redirect
+from django.views.generic import DetailView
 
 from SoftUni_Petstagram.main_app.forms import CreateProfileForm, EditProfileForm, DeleteProfileForm
 from SoftUni_Petstagram.main_app.helpers import get_profile
 from SoftUni_Petstagram.main_app.models import Profile, PetPhoto, Pet
 
 
-def profile_details(request):
-    profile = get_profile()
+# def profile_details(request, pk):
+#     profile = Profile.objects.get(pk=pk)
+#     pets_for_profile = list(Pet.objects.filter(user_id=profile.user_id))  # self.object is a profile
+#
+#     # to get number of likes and number of photos per profile
+#     pet_photos = PetPhoto.objects \
+#         .filter(tagged_pets__in=pets_for_profile) \
+#         .distinct()
+#     total_likes_count = sum([pp.likes for pp in pet_photos])
+#     photos_count = pet_photos.count()
+#     context = {
+#         'profile': profile,
+#         'total_likes_count': total_likes_count,
+#         'photos_count': photos_count,
+#         'pets_for_profile': pets_for_profile,
+#     }
+#     return render(request, 'main_app/profile_details.html', context)
 
-    all_photos_for_profile = PetPhoto.objects \
-        .filter(tagged_pets__owner=profile) \
-        .distinct()
 
-    total_likes_count = sum([pp.likes for pp in all_photos_for_profile])
-    photos_count = all_photos_for_profile.count()
+class ProfileDetailsView(DetailView):
+    model = Profile
+    template_name = 'main_app/profile_details.html'
+    context_object_name = 'profile'
 
-    return render(request, 'main_app/profile_details.html',
-                  {'profile': profile,
-                   'total_likes_count': total_likes_count,
-                   'photos_count': photos_count,
-                   })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pets_for_profile = list(Pet.objects.filter(user_id=self.object.user_id))  # self.object is a profile
+
+        # to get number of likes and number of photos per profile
+        pet_photos = PetPhoto.objects \
+            .filter(tagged_pets__in=pets_for_profile) \
+            .distinct()
+        total_likes_count = sum([pp.likes for pp in pet_photos])
+        photos_count = pet_photos.count()
+
+        context.update(  # will merge both dicts, i.e. this to the empty one
+            {'pets_for_profile': pets_for_profile,
+             'total_likes_count': total_likes_count,
+             'photos_count': photos_count,
+             }
+        )
+        return context
 
 
 def create_profile_view(request):

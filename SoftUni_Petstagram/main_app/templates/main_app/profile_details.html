@@ -41,6 +41,7 @@
     <div class="container mb-4">
         <div class="d-flex justify-content-start mb-5">
 
+            {#        can use the context variable pets_for_profile too #}
             {% for pet in profile.pet_set.all %}
                 <div style="width: 18rem;">
                     <h5>{{ pet.name }}</h5>

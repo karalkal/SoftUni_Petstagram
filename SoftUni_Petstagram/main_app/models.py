@@ -75,6 +75,10 @@ class Pet(models.Model):
 
 
 class PetPhoto(models.Model):
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE
+    )
     photo = models.ImageField(
         upload_to='images',
         # validators=validate_max_size

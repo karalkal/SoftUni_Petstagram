@@ -19,14 +19,19 @@
                 </div>
             {% endfor %}
             <!-- Description -->
-            <p class="mt-2">Description: {{ searched_photo.description}}</p>
+            <p class="mt-2">Description: {{ searched_photo.description }}</p>
             <!-- Likes Button -->
-            <a href="{% url 'like pet photo' searched_photo.id  %}"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+
+            {% if not is_owner %}
+                {#                cannot like their own photo #}
+                <a href="{% url 'like pet photo' searched_photo.id %}"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+            {% endif %}
             <!-- Likes Counter -->
             <p class="mt-2">Likes: {{ searched_photo.likes }}</p>
-            <!-- Buttons -->
-            <a href="{% url 'edit pet photo' searched_photo.pk%}" class="btn btn-primary">Edit</a>
-            <a href="{% url 'delete pet photo' searched_photo.pk %}" class="btn btn-danger">Delete</a>
+            {% if is_owner %}
+                <a href="{% url 'edit pet photo' searched_photo.pk %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'delete pet photo' searched_photo.pk %}" class="btn btn-danger">Delete</a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
