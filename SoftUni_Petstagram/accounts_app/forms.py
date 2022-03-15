@@ -3,8 +3,8 @@ from datetime import datetime
 from django import forms
 from django.contrib.auth import forms as auth_forms, get_user_model
 
-from SoftUni_Petstagram.accounts_app.models import Profile
-from SoftUni_Petstagram.main_app.models import PetPhoto
+from SoftUni_Petstagram.accounts_app.models import Profile, PetstagramUser
+from SoftUni_Petstagram.main_app.models import PetPhoto, Pet
 
 
 class CreateProfileForm(auth_forms.UserCreationForm):
@@ -12,7 +12,7 @@ class CreateProfileForm(auth_forms.UserCreationForm):
     last_name = forms.CharField(max_length=Profile.L_NAME_MAX_LEN)
     profile_picture = forms.URLField()
     date_of_birth = forms.DateField()
-    description = forms.Textarea()
+    description = forms.CharField(max_length=80, widget=forms.Textarea, )
     email = forms.EmailField()
     gender = forms.ChoiceField(choices=Profile.GENDER_CHOICES)
 
@@ -26,6 +26,23 @@ class CreateProfileForm(auth_forms.UserCreationForm):
         # To add class to all form fields
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        profile = Profile(
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'],
+            profile_picture=self.cleaned_data['profile_picture'],
+            date_of_birth=self.cleaned_data['date_of_birth'],
+            description=self.cleaned_data['description'],
+            email=self.cleaned_data['email'],
+            gender=self.cleaned_data['gender'],
+            user=user
+        )
+        if commit:
+            profile.save()
+
+        return user
 
     class Meta:
         model = get_user_model()
@@ -125,10 +142,12 @@ class DeleteProfileForm(forms.ModelForm):
         fields = ()  # no fields will be shown
 
     def save(self, commit=True):
-        # owners_pets = Pet.objects.filter(petphoto__tagged_pets__owner=self.instance)
-        owners_pets = self.instance.pet_set.all()
-        owners_photos = PetPhoto.objects.filter(tagged_pets__user=self.instance)
-        owners_photos.delete()
+        related_user_pk = PetstagramUser.object.get(pk=self.instance.pk)
+        # owners_pets = self.instance.pet_set.all()
+        owners_pets = Pet.objects.filter(user_id=related_user_pk)
+        owners_photos = PetPhoto.objects.filter(user_id=related_user_pk)
+        owners_photos.delete()  # CASCADE should do that if implemented properly
         owners_pets.delete()
-        self.instance.delete()  # to remove record from DB
+        self.instance.delete()
+        PetstagramUser(related_user_pk).delete()
         return self.instance

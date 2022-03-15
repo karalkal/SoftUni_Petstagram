@@ -6,13 +6,13 @@
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-6">
+                <!-- Form for Creating a Profile -->
                 <form method="POST" action="{% url 'create profile' %}">
-
-                    <!-- Form for Creating a Profile -->
                     {% csrf_token %}
                     {{ form }}
                     <button class="btn btn-primary mt-2" type="submit">Create</button>
                 </form>
+
             </div>
             <div class="col-lg-3"></div>
         </div>

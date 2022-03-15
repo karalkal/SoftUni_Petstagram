@@ -31,8 +31,8 @@
                 <p class="mt-2">Total Images: {{ photos_count }}</p>
                 <p class="mt-2">Total Likes: {{ total_likes_count }}</p>
                 {% if is_owner_of_profile %}
-                    <a href="{% url 'edit profile' %}" class="btn btn-primary">Edit</a>
-                    <a href="{% url 'delete profile' %}" class="btn btn-danger">Delete</a>
+                    <a href="{% url 'edit profile' profile.user_id %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'delete profile' profile.user_id %}" class="btn btn-danger">Delete</a>
                 {% endif %}
             </div>
         </div>

@@ -10,7 +10,7 @@ class HomeView(RedirectToDashboard, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['hide_additional_menu_items'] = True  # add this to context dict
+        # context['hide_additional_menu_items'] = True  # add this to context dict
         return context
 
     ## Now inherited from RedirectToDashboard

@@ -6,15 +6,13 @@
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-6">
-
                 <!-- Login Form -->
-                <form method="POST">
+                <form method="POST" action="{% url 'login user' %}">
                     {% csrf_token %}
                     {{ form }}
                     <button class="btn btn-primary mt-2" type="submit">Log in</button>
                 </form>
                 <!-- End Login Form -->
-
             </div>
             <div class="col-lg-3"></div>
         </div>

@@ -39,15 +39,28 @@ class CreatePetForm(forms.ModelForm):
         }
 
 
-class UpdatePetForm(CreatePetForm):
-    pass
+class UpdatePetForm(CreatePetForm, forms.ModelForm):
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(user, *args, **kwargs)  # Displays error without user in args
+        self.user = user
+
+    def save(self, commit=True):
+        pet = super().save(commit=False)
+        pet.user = self.user
+        if commit:
+            pet.save()
+        return pet  # DON'T FORGET
+
+    # class Meta inherited from CreatePetForm
 
 
+'''
 class DeletePetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for (_, field) in self.fields.items():
             field.widget.attrs['disabled'] = 'disabled'
+            # field.widget.attrs['readonly'] = 'readonly'
             field.widget.attrs['class'] = "form-control"
 
     def save(self, commit=True):
@@ -57,13 +70,12 @@ class DeletePetForm(forms.ModelForm):
     class Meta:
         model = Pet
         fields = ('name', 'type', 'date_of_birth')
+'''
 
 
 class AddPetPhotoForm(forms.ModelForm):
     # pass
     class Meta:
-        # owners_pets = Pet.objects.filter(user=get_profile())
-        # PET_TYPES = [(x.type, x.type) for x in owners_pets]  # ("Cat", "Cat"), ("Dog", "Dog"),
         model = PetPhoto
         fields = ('photo', 'description', 'tagged_pets')
         labels = {'photo': "Pet Image",
@@ -91,8 +103,6 @@ class AddPetPhotoForm(forms.ModelForm):
 class EditPetPhotoForm(forms.ModelForm):
     # pass
     class Meta:
-        # owners_pets = Pet.objects.filter(user=get_profile())
-        # PET_TYPES = [(x.type, x.type) for x in owners_pets]  # ("Cat", "Cat"), ("Dog", "Dog"),
         model = PetPhoto
         fields = ('description', 'tagged_pets')
         labels = {'photo': "Pet Image",
