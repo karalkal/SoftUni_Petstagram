@@ -3,12 +3,12 @@
 
     <div class="container mb-5 ">
         <h1 class="text-center">Edit Pet Photo</h1>
-                <img src="{{ photo_to_edit.photo.url }}"
-                     class="w-50 rounded mx-auto d-block" alt="{{ photo_to_edit.description }}">
+        <img src="{{ object.photo.url }}"
+             class="w-50 rounded mx-auto d-block" alt="{{ object.description }}">
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-6">
-                <form method="POST" action="{% url 'edit pet photo' photo_to_edit.pk %}">
+                <form method="POST" action="{% url 'edit pet photo' object.pk %}">
                     {% csrf_token %}
                     <!-- Form for Editing a Photo -->
                     {{ form }}

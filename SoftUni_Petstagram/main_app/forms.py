@@ -42,7 +42,10 @@ class CreatePetForm(forms.ModelForm):
 class UpdatePetForm(CreatePetForm, forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         super().__init__(user, *args, **kwargs)  # Displays error without user in args
-        self.user = user
+        self.user = user  # attach user to instance, not needed in CBV
+
+        for (_, field) in self.fields.items():
+            field.widget.attrs['class'] = "form-control"
 
     def save(self, commit=True):
         pet = super().save(commit=False)

@@ -1,6 +1,7 @@
 from django.urls import path
 from .views.generic import HomeView, DashboardView, error_401
-from .views.pet_photos import PetPhotoDetailsView, like_pet_photo, CreatePetPhotoView, edit_pet_photo, delete_pet_photo
+from .views.pet_photos import PetPhotoDetailsView, like_pet_photo, CreatePetPhotoView, PetPhotoEditView, \
+    delete_pet_photo
 from .views.pets import CreatePetView, EditPetView, DeletePetView
 
 urlpatterns = [
@@ -11,7 +12,7 @@ urlpatterns = [
     path('photo/details/<int:pk>/', PetPhotoDetailsView.as_view(), name="pet photo details"),
     path('photo/like/<int:pk>/', like_pet_photo, name="like pet photo"),
     path('photo/add/', CreatePetPhotoView.as_view(), name="add pet photo"),
-    path('photo/edit/<int:pk>/ ', edit_pet_photo, name="edit pet photo"),
+    path('photo/edit/<int:pk>/ ', PetPhotoEditView.as_view(), name="edit pet photo"),
     path('photo/delete/<int:pk>/ ', delete_pet_photo, name="delete pet photo"),
 
     path('pet/add/', CreatePetView.as_view(), name="add pet"),
